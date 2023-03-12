@@ -1,0 +1,27 @@
+***  How to run ***
+
+Important
+    * https://cloud.google.com/recaptcha-enterprise/docs/create-key
+      use the above link to generate google reCaptcha site key for your particular site. Paste the site key in login.html on line number 62.
+      
+    * In app.py file, on line number 116,117 enter the emailId and password from which email should be sent on managers email id for OTP verification
+
+1.  open project folder in VS Code 
+2.  connect python interpretor with VS code
+3.  type python --version to check python connection
+4.  install all packages from terminal/powershell(windows) 
+5.  type python in terminal to open python terminal
+    1) from app import db,Admin
+    2) db.drop_all()
+    3) db.create_all()
+    4) a = Admin(username='<username>'password='<password>')   
+        -   (To add login details of admin)
+    password must be atleast 8 character long and contain atleast one lowercase one uppercas one digit one special symbol
+    5) db.session.add(a)
+    6) db.session.commit()
+    7) exit()   To exit from python terminal
+
+// Now it's time to run project
+6. type in terminal 'python app.py'
+7. click on the link displayed in the terminal
+    'http://127.0.0.1:5000'

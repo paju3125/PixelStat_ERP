@@ -1,0 +1,22 @@
+*Sofware Requirement*
+
+1.  VS Code editor
+2.  Python (Any latest version)     - used (python 3.9.13)
+3.  Google Chrome
+
+
+*Modules/packages required*
+Command to install packages
+-   pip install <package_name>
+
+1.  flask
+2.  datetime
+3.  json
+4.  random
+5.  smtplib
+6.  Flask-SQLAlchemy
+7.  Werkzeug
+8.  openpyxl
+9.  os
+10. ssl
+11. email

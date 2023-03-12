@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>ERP</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="{{ url_for('static', filename='assets/img/Pixel_logo.png')}}" rel="icon">
+    <link href="{{ url_for('static', filename='assets/img/apple-touch-icon.png')}}" rel="apple-touch-icon">
+
+    <!-- ICOFONT ICONS -->
+    <link href="{{ url_for('static', filename='/assets/vendor/icofont/icofont.min.css')}}" rel="stylesheet" />
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{{ url_for('static', filename='assets/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/vendor/boxicons/css/boxicons.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/vendor/glightbox/css/glightbox.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/vendor/remixicon/remixicon.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.css')}}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="{{ url_for('static', filename='assets/css/style.css')}}" rel="stylesheet">
+
+    <!-- =======================================================
+  * Template Name: Tempo - v4.8.0
+  * Template URL: https://bootstrapmade.com/tempo-free-onepage-bootstrap-theme/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+</head>
+
+<body class="admin">
+
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top ">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <h1 class="logo"><a href="/admin">PixelStat</a></h1>
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+            <nav id="navbar" class="navbar">
+                <ul>
+                    <li><a class="nav-link scrollto active" href="admin#home">Dashboard</a></li>
+                    <li>
+                        <a class="nav-link scrollto" href="#addManager">Add Manager</a>
+                    </li>
+                    <li>
+                        <a class="nav-link scrollto" href="#upload-data">Upload Data</a>
+                    </li>
+                    <!-- <li><a class="nav-link scrollto logout" href="#logout">Logout</a></li> -->
+
+                </ul>
+                <i class="bi bi-list mobile-nav-toggle"></i>
+            </nav>
+            <button class="btn btn-danger logout">Logout</button>
+            <!-- .navbar -->
+        </div>
+    </header>
+    <!-- End Header -->
+
+    <section id="logout"></section>
+
+    <!-- ======= home Section ======= -->
+    <section id="home" class="services d-none">
+        {% if alert %} {% if alert['section'] == 'admin' %}
+
+        <div class="alert alert-{{alert['type']}} alert-dismissible fade show" role="alert" id="alert">
+            <strong>{{'ERROR : ' if alert['type'] == 'danger' else alert['type'].upper()+' : '}}</strong> {{alert['message']}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %} {% endif %}
+
+        <!-- Filter start -->
+        <div class="container d-flex flex-row mb-3" id="filter">
+            <form class="d-flex flex-row bd-highlight mb-3 d-inline" id="filterForm">
+                <div class="p-2 bd-highlight">
+                    <select class="form-select" name="region" aria-label="Default select example">
+                        <option value=0 selected>region</option>
+                        <option value="Kolhapur">Kolhapur</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Beed">Beed</option>
+                        <option value="Aurangabad">Aurangabad</option>
+                        <option value="Nashik">Nashik</option>
+                        <option value="Satara">Satara</option>
+                        <option value="Nagpur">Nagpur</option>
+                        <option value="Sawantwadi">Sawantwadi</option>
+                        <option value="Dadar">Dadar</option>
+                    </select>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <select class="form-select" id="memberType" name="memberType" aria-label="Default select example">
+                        <option value=0 selected>Member type</option>
+                        <option value="Individual B">Individual B</option>
+                        <option value="Individual A">Individual A</option>
+                        <option value="Company Sole">Company Sole</option>
+                        <option value="Company Partnership">Company Partnership</option>
+                    </select>
+                </div>
+                <div class="p-2 bd-highlight">
+                    <input type="text" name="memberNo" pattern="[0-9]{10}" min="10000" max="99999999" id="memberNo" class="form-control" placeholder="Member No.">
+                </div>
+                <div class="p-2 bd-highlight">
+                    <button class="btn btn-success" id="filterBtn">
+                        Search
+                    </button>
+                </div>
+            </form>
+
+            <div class="d-inline mr-3" style="width: fit-content;">
+                <button class="btn btn-primary" id="add-new-record-btn">
+                    Add new entry
+                </button>
+            </div>
+            <div class="card" style="width: 10rem;">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-black text-light"><span class="badge badge-primary"> </span> - Individual A</li>
+                    <li class="list-group-item bg-black text-light"><span class="badge badge-success"> </span> - Individual B</li>
+                    <li class="list-group-item bg-black text-light"><span class="badge badge-warning"> </span> - Not Renewed
+                    </li>
+                    <li class="list-group-item bg-black text-light"><span class="badge badge-danger"> </span> - Lifetime Membership
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- Filter end -->
+
+        <!-- Display records in table -->
+        <div class="container-fluid">
+
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">FNO</th>
+                        <th scope="col">Member No.</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Member Name</th>
+                        <th scope="col">Company Name</th>
+                        <th scope="col">Contact No.</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">DOB</th>
+                        <th scope="col">Member Category</th>
+                        <th scope="col">Region</th>
+                        <th scope="col" class="d-none">Membership type</th>
+                        <th scope="col" class="d-none">renewal status</th>
+                        <th scope="col" class="d-none">renewal date</th>
+                        <th scope="col" class="d-none">renewal amount</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebody">
+                    {% for record in allRecords.items %} {% if record.membership_type == 'Individual A' %} {% if record.renewal_status == False %}
+                    <tr class="bg-warning text-light">
+                        {% else %} {% if (current_date-record.membership_date).days > (365*6)%}
+                        <tr class="bg-danger bg-gradient text-light">
+                            {% else %}
+                            <tr class="bg-primary bg-gradient text-light">
+                                {% endif %} {% endif %} {% elif record.membership_type == 'Individual B' %}
+                                <tr class="bg-success text-light">
+                                    {% else %}
+                                    <tr>
+                                        {% endif %}
+                                        <td>{{record.fno}}</td>
+                                        <td>{{record.member_no}}</td>
+                                        <td>{{record.membership_type}}</td>
+                                        <td>{{record.member_name}}</td>
+                                        <td>{{record.company_name}}</td>
+                                        <td>{{record.contact}}</td>
+                                        <td>{{record.email}}</td>
+                                        <td>{{record.address}}</td>
+                                        <td>{{record.dob}}</td>
+                                        <td>{{record.member_Category}}</td>
+                                        <td>{{record.region}}</td>
+                                        <td class="d-none">{{record.membership_date}}</td>
+                                        <td class="d-none">{{record.renewal_status}}</td>
+                                        <td class="d-none">{{record.renewal_date}}</td>
+                                        <td class="d-none">{{record.renewal_amount}}</td>
+                                        <td>
+                                            <button class="edit-form badge badge-outline-success mx-1">
+                                <i class="icofont-edit"></i>
+                            </button>
+                                            <button class="delete-record badge badge-outline-success1 mx-1">
+                                <i class="icofont-trash"></i>
+                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                </tbody>
+            </table>
+            {% for page_num in allRecords.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)%} {% if page_num %} {% if allRecords.page == page_num%}
+            <a class="btn btn-info mb-4" href="{{url_for('admin',page=page_num)}}">{{page_num}}</a> {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{url_for('admin',page=page_num)}}">{{page_num}}</a> {% endif %} {% else %} ... {% endif %} {% endfor %}
+            <button class="btn btn-primary float-right mb-2 p-2"><i class="icofont-download"> </i><a
+                    href="{{url_for('downloadFile',page=page_num)}}" class="text-light">Download</a></button>
+            <button class="btn btn-danger float-right mb-2 mx-2 p-2" onclick="deleteRecords()">
+                <i class="icofont-ui-delete"></i>
+                Delete all Records
+            </button>
+        </div>
+        <!-- Table end -->
+
+        <script>
+            function deleteRecords() {
+                typed = prompt('Type "CONFIRM" to delete all records.');
+                if (typed == "CONFIRM") {
+                    window.location.href = "{{url_for('deleteAllRecords')}}"
+                } else {
+                    alert('Data is safe')
+                }
+            }
+        </script>
+
+        <!-- ======= Delete record form ======= -->
+        <form method="post" action="/admin/deleteRecord" class="forms-sample mt-3 d-none" id="DDForm" name="DDForm" autocomplete="off">
+            <div class="form-group">
+                <input type="text" name="id" class="form-control" id="id" />
+            </div>
+        </form>
+        <!-- ======= Delete record form end ======= -->
+
+        <!-- To add new record -->
+        <section class="overlay-add-form d-none">
+            <div class="container add-record">
+
+                <h4 class="card-title">Add New Record</h4>
+                <form class="forms-sample my-3" method="post" action="admin/addRecord" id="add-record-form">
+                    <div class="mb-3">
+                        <label for="mno" class="form-label">Member Number</label>
+                        <input type="number" class="form-control" name="mno" id="mno" min="10000" max="99999999" required>
+                    </div>
+                    <!-- <div class="mb-3">
+                        <label for="type" class="form-label">Type of Membership</label>
+                        <select class="form-select" name="type" id="type" aria-label="Default select example">
+                            <option value="Individual B" selected>Individual B</option>
+                            <option value="Individual A">Individual A</option>
+                            <option value="Company Sole">Company Sole</option>
+                            <option value="Company Partnership">Company Partnership</option>
+                        </select>
+                    </div> -->
+                    <div class="mb-3">
+                        <label for="cnm" class="form-label">Company Name</label>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="cnm" id="cnm" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mnm" class="form-label">Member Name</label>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="mnm" id="mnm" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact" class="form-label">Contact Number</label>
+                        <input type="number" class="form-control" pattern="[0-9]{10}" name="contact" id="contact" min="1000000000" max="9999999999" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addr" class="form-label">Address</label>
+                        <textarea class="form-control" name="address" id="addr" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Date of Birth</label>
+                        <input type="date" class="form-control" name="dob" id="dob" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Member Category</label>
+                        <select class="form-select" name="category" id="category" size="5" aria-label="size 3 select example" required\>
+                            <option selected>Actor</option>
+                            <option value="1">Actress</option>
+                            <option value="2">Art Director</option>
+                            <option value="3">Art Promotion</option>
+                            <option value="4">Asst. Art Director</option>
+                            <option value="5">Asst. Cameraman</option>
+                            <option value="6">Asst. Choreographer</option>
+                            <option value="7">Asst. Director</option>
+                            <option value="8">Asst. Motion Photographer</option>
+                            <option value="9">Asst. Photographer</option>
+                            <option value="10">Asst. Production Manager</option>
+                            <option value="11">Cameraman</option>
+                            <option value="12">Catering</option>
+                            <option value="13">Choreographer</option>
+                            <option value="14">Cinematographer</option>
+                            <option value="15">Co-Production House</option>
+                            <option value="16">Co-Actor</option>
+                            <option value="17">Director</option>
+                            <option value="18">Distributor</option>
+                            <option value="19">Dress Designer</option>
+                            <option value="20">Dressman</option>
+                            <option value="21">Editor</option>
+                            <option value="22">Fight Master</option>
+                            <option value="23">Hair Dresser</option>
+                            <option value="24">Lightman</option>
+                            <option value="25">Lyrics</option>
+                            <option value="26">Make up Artist</option>
+                            <option value="27">Motion Photographer</option>
+                            <option value="28">Music Director</option>
+                            <option value="29">Photographer</option>
+                            <option value="30">Producer</option>
+                            <option value="31">Production House</option>
+                            <option value="32">Production Manager</option>
+                            <option value="33">Promotion</option>
+                            <option value="34">Screen Play</option>
+                            <option value="35">Singer</option>
+                            <option value="36">Sound Designer</option>
+                            <option value="37">Spot Boy</option>
+                            <option value="38">Supp. Actor</option>
+                            <option value="41">Supp. Actress</option>
+                            <option value="42">Writer</option>
+                            <option value="43">Writer/Musician</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="membership_date" class="form-label">Membership Date</label>
+                        <input type="date" class="form-control" name="membership_date" id="membership_date" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="region" class="form-label">Region</label>
+                        <select class="form-select" name="region" id="region" size="5" aria-label="size 5 select example" required>
+                            <option value="Kolhapur" selected>Kolhapur</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Beed">Beed</option>
+                            <option value="Aurangabad">Aurangabad</option>
+                            <option value="Nashik">Nashik</option>
+                            <option value="Satara">Satara</option>
+                            <option value="Nagpur">Nagpur</option>
+                            <option value="Sawantwadi">Sawantwadi</option>
+                            <option value="Dadar">Dadar</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="renewal_status" class="form-label">Renewal Status</label>
+                        <select class="form-select" name="renewal_status" id="renewal_status" aria-label="Default select example" required>
+                            <option value=0 selected>False</option>
+                            <option value=1>True</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="renewal_date" class="form-label">Renewal Date</label>
+                        <input type="date" name="renewal_date" class="form-control" id="renewal_date" disabled required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="renewal_amount" class="form-label">Renewal Amount</label>
+                        <input type="number" name="renewal_amount" class="form-control" pattern="[0-9]{10}" id="renewal_amount" disabled required>
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2 add-dept-btn">Submit</button>
+                    <button class="btn btn-dark cancel-dept-btn">Cancel</button>
+                </form>
+            </div>
+        </section>
+
+
+        <section class="overlay-view d-none">
+            <div class="container-fluid view-all">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">FNO</th>
+                            <th scope="col">Member No.</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Member Name</th>
+                            <th scope="col">Contact No.</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">Member Category</th>
+                            <th scope="col">Region</th>
+                            <th scope="col" class="d-none">Membership type</th>
+                            <th scope="col" class="d-none">renewal status</th>
+                            <th scope="col" class="d-none">renewal date</th>
+                            <th scope="col" class="d-none">renewal amount</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tablebody">
+                        {% for record in allRecords.items %} {% if record.membership_type == 'Individual A' %} {% if record.renewal_status == False %}
+                        <tr class="bg-warning text-light">
+                            {% else %} {% if (current_date-record.membership_date).days > (365*6)%}
+                            <tr class="bg-danger bg-gradient text-light">
+                                {% else %}
+                                <tr class="bg-primary bg-gradient text-light">
+                                    {% endif %} {% endif %} {% elif record.membership_type == 'Individual B' %}
+                                    <tr class="bg-success text-light">
+                                        {% else %}
+                                        <tr>
+                                            {% endif %}
+                                            <td>{{record.fno}}</td>
+                                            <td>{{record.member_no}}</td>
+                                            <td>{{record.membership_type}}</td>
+                                            <td>{{record.member_name}}</td>
+                                            <td>{{record.contact}}</td>
+                                            <td>{{record.email}}</td>
+                                            <td>{{record.address}}</td>
+                                            <td>{{record.dob}}</td>
+                                            <td>{{record.member_Category}}</td>
+                                            <td>{{record.region}}</td>
+                                            <td class="d-none">{{record.membership_date}}</td>
+                                            <td class="d-none">{{record.renewal_status}}</td>
+                                            <td class="d-none">{{record.renewal_date}}</td>
+                                            <td class="d-none">{{record.renewal_amount}}</td>
+                                            <td>
+                                                <button class="edit-form badge badge-outline-success mx-1">
+                                    <i class="icofont-edit"></i>
+                                </button>
+                                                <button class="delete-record badge badge-outline-success1 mx-1">
+                                    <i class="icofont-trash"></i>
+                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- To update record -->
+        <section class="overlay-edit-form d-none">
+            <div class="container edit-record">
+
+                <h4 class="card-title">Update Record</h4>
+                <form class="forms-sample my-3" id="edit-record-form" method="post" action="admin/updateRecord">
+                    <div class="mb-3">
+                        <label for="ur_fno" class="form-label">FNO</label>
+                        <input type="number" name="fno" class="form-control" id="ur_fno" readonly="'readonly">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_mno" class="form-label">Member Number</label>
+                        <input type="number" name="mno" class="form-control" id="ur_mno" min="1000000000" max="9999999999" readonly="'readonly">
+                    </div>
+                    <!-- <div class="mb-3">
+                        <label for="ur_type" class="form-label">Type of Membership</label>
+                        <select class="form-select" name="type" id="ur_type" aria-label="Default select example">
+                            <option value="Individual B" selected>Individual B</option>
+                            <option value="Individual A">Individual A</option>
+                            <option value="Company Sole">Company Sole</option>
+                            <option value="Company Partnership">Company Partnership</option>
+                        </select>
+                    </div> -->
+                    <div class="mb-3">
+                        <label for="ur_cnm" class="form-label">Company Name</label>
+                        <input type="text" name="cnm" class="form-control" id="ur_cnm">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_mnm" class="form-label">Member Name</label>
+                        <input type="text" name="mnm" class="form-control" id="ur_mnm">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_contact" class="form-label">Contact Number</label>
+                        <input type="number" name="contact" pattern="[0-9]{10}" class="form-control" id="ur_contact" min="1000000000" max="9999999999">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ur_email" class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" id="ur_email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_addr" class="form-label">Address</label>
+                        <textarea class="form-control" name="address" id="ur_addr"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_dob" class="form-label">Date of Birth</label>
+                        <input type="date" name="dob" class="form-control" id="ur_dob" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_category" class="form-label">Member Category</label>
+                        <select class="form-select" name="category" id="ur_category" size="5" aria-label="size 3 select example">
+                            <option value="Actor" selected>Actor</option>
+                            <option value="Actress">Actress</option>
+                            <option value="Art Director">Art Director</option>
+                            <option value="Art Promotion">Art Promotion</option>
+                            <option value="Asst. Art Director">Asst. Art Director</option>
+                            <option value="Asst. Cameraman">Asst. Cameraman</option>
+                            <option value="Asst. Choreographer">Asst. Choreographer</option>
+                            <option value="Asst. Director">Asst. Director</option>
+                            <option value="Asst. Motion Photographer">Asst. Motion Photographer</option>
+                            <option value="Asst. Photographer">Asst. Photographer</option>
+                            <option value="Asst. Production Manager">Asst. Production Manager</option>
+                            <option value="Cameraman">Cameraman</option>
+                            <option value="Catering">Catering</option>
+                            <option value="Choreographer">Choreographer</option>
+                            <option value="Cinematographer">Cinematographer</option>
+                            <option value="Co-Production House">Co-Production House</option>
+                            <option value="Co-Actor">Co-Actor</option>
+                            <option value="Director">Director</option>
+                            <option value="Distributor">Distributor</option>
+                            <option value="Dress Designer">Dress Designer</option>
+                            <option value="Dressman">Dressman</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Fight Master">Fight Master</option>
+                            <option value="Hair Dresser">Hair Dresser</option>
+                            <option value="Lightman">Lightman</option>
+                            <option value="Lyrics">Lyrics</option>
+                            <option value="Make up Artist">Make up Artist</option>
+                            <option value="Motion Photographer">Motion Photographer</option>
+                            <option value="Music Director">Music Director</option>
+                            <option value="Photographer">Photographer</option>
+                            <option value="Producer">Producer</option>
+                            <option value="Production House">Production House</option>
+                            <option value="Production Manager">Production Manager</option>
+                            <option value="Promotion">Promotion</option>
+                            <option value="Screen Play">Screen Play</option>
+                            <option value="Singer">Singer</option>
+                            <option value="Sound Designer">Sound Designer</option>
+                            <option value="Spot Boy">Spot Boy</option>
+                            <option value="Supp. Actor">Supp. Actor</option>
+                            <option value="Supp. Actress">Supp. Actress</option>
+                            <option value="Writer">Writer</option>
+                            <option value="Writer/Musician">Writer/Musician</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ur_region" class="form-label">Region</label>
+                        <select class="form-select" id="ur_region" size="5" name="region" aria-label="size 5 select example">
+                            <option value="Kolhapur" selected>Kolhapur</option>
+                            <option value="Pune">Pune</option>
+                            <option value="Mumbai">Mumbai</option>
+                            <option value="Beed">Beed</option>
+                            <option value="Aurangabad">Aurangabad</option>
+                            <option value="Nashik">Nashik</option>
+                            <option value="Satara">Satara</option>
+                            <option value="Nagpur">Nagpur</option>
+                            <option value="Sawantwadi">Sawantwadi</option>
+                            <option value="Dadar">Dadar</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ur_membership_date" class="form-label">Membership Date</label>
+                        <input type="date" class="form-control" name="membership_date" id="ur_membership_date" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Urenewal_status" class="form-label">Renewal Status</label>
+                        <select class="form-select" name="renewal_status" id="Urenewal_status" aria-label="Default select example" required>
+                            <option value='0'>False</option>
+                            <option value='1'>True</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Urenewal_date" class="form-label">Renewal Date</label>
+                        <input type="date" name="renewal_date" class="form-control" id="Urenewal_date" readonly required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="Urenewal_amount" class="form-label">Renewal Amount</label>
+                        <input type="number" name="renewal_amount" class="form-control" pattern="[0-9]{10}" id="Urenewal_amount" readonly required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary me-2 add-dept-btn">Submit</button>
+                    <button class="btn btn-dark cancel-dept-btn">Cancel</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- To remove record -->
+        <section class="overlay-delete-record d-none">
+            <!-- ======= Choice ======= -->
+            <div class="choice-con row justify-content-center">
+                <div class="col-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Delete record</h4>
+                            <p class="card-description">
+                                Confirm delete record
+                            </p>
+                            <p class="text-light delete-mno"></p>
+                            <div class="choices-delete mt-5 row justify-content-around">
+                                <button class="confirm-delete col-3 btn btn-success">
+                                    Confirm
+                                </button>
+                                <button class="cancel-delete col-3 btn btn-outline-danger" id="deleteRecord">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ======= Choice ======= -->
+        </section>
+
+    </section>
+    <!-- End home -->
+
+    <!-- Section  Add Manager start-->
+    <section id="addManager" class="services mt-5 d-none">
+        {% if alert %} {% if alert['section'] == 'manager' %}
+
+        <div class="alert alert-{{alert['type']}} alert-dismissible fade show mb-3" role="alert">
+            <strong>{{'ERROR : ' if alert['type'] == 'danger' else alert['type'].upper()+' : '}}</strong> {{alert['message']}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %} {% endif %}
+        <div class="container-fluid outercon">
+            <div class="container">
+                <h3 class="heading mt-3">Add Manager Form</h3>
+                <form id="addManagerForm" method="post" action="admin/addManager">
+                    <div class="form-group mt-3">
+                        <label for="am_name">Name</label>
+                        <input type="text" name="name" id="am_name" class="form-control" placeholder="Enter name" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="am_mobile">Mobile No.</label>
+                        <input type="number" pattern="[0-9]{10}" name="mobile" class="form-control" id="am_mobile" min="1000000000" max="9999999999" placeholder="Mobile" required />
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="am_email">Email address</label>
+                        <input type="email" class="form-control" id="am_email" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="am_password">Password</label>
+                        <input type="password" class="form-control" id="am_password" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
+                            placeholder="Password" required>
+                    </div>
+                    <div class="form-group mt-3">
+                        <label for="am_region">Region</label>
+                        <div class="btn-toolbar mb-3" id="region" role="toolbar" name="am_region" aria-label="Toolbar with button groups">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck1" value="Kolhapur" checked>
+                                <label class="form-check-label" for="am_inlineRadio1">Kolhapur</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck2" value="Pune">
+                                <label class="form-check-label" for="am_inlineRadio2">Pune</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck3" value="Mumbai">
+                                <label class="form-check-label" for="am_inlineRadio3">Mumbai</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck4" value="Beed">
+                                <label class="form-check-label" for="am_inlineRadio4">Beed</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck5" value="Aurangabad">
+                                <label class="form-check-label" for="am_inlineRadio5">Aurangabad</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck6" value="Nashik">
+                                <label class="form-check-label" for="am_inlineRadio6">Nashik</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck7" value="Satara">
+                                <label class="form-check-label" for="am_inlineRadio7">Satara</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck8" value="Sawantwadi">
+                                <label class="form-check-label" for="am_inlineRadio8">Sawantwadi</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck9" value="Nagpur">
+                                <label class="form-check-label" for="am_inlineRadio9">Nagpur</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="region" id="am_inlineCheck10" value="Dadar">
+                                <label class="form-check-label" for="am_inlineRadio10">Dadar</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label for="isDownloadable">Able to download?</label>
+                        <div class="btn-toolbar mb-3" id="isDownloadable" role="toolbar" name="isdownloadable" aria-label="Toolbar with button groups">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="downloadable" id="am_yes" value="Yes">
+                                <label class="form-check-label" for="am_yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="downloadable" id="am_no" value="No" checked>
+                                <label class="form-check-label" for="am_no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary addManagerBtn px-3">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Update Manager Record -->
+            <div class="overlay-edit-form d-none">
+                <div class="container edit-record">
+                    <h3 class="heading mt-3">Update Manager Form</h3>
+                    <form id="editManagerForm" method="post" action="admin/editManager">
+                        <div class="form-group mt-3 d-none">
+                            <label for="um_mid">Manager ID</label>
+                            <input type="text" name="mid" id="um_mid" class="form-control" placeholder="" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="um_name">Name</label>
+                            <input type="text" name="name" id="um_name" class="form-control" placeholder="Enter name" required>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="um_mobile">Mobile No.</label>
+                            <input type="number" pattern="[0-9]{10}" name="mobile" class="form-control" id="um_mobile" min="1000000000" max="9999999999" placeholder="Mobile" required />
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="um_email">Email address</label>
+                            <input type="email" class="form-control" id="um_email" name="email" aria-describedby="emailHelp" placeholder="Enter email" required>
+                        </div>
+                        <!-- <div class="form-group mt-3">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" class="form-control" id="inputPassword" name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character"
+                                placeholder="Password" required>
+                        </div> -->
+                        <div class="form-group mt-3">
+                            <label for="region">Region</label>
+                            <div class="btn-toolbar mb-3" id="region" role="toolbar" name="region" aria-label="Toolbar with button groups">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck1" value="Kolhapur">
+                                    <label class="form-check-label" for="um_inlineCheck1">Kolhapur</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck2" value="Pune">
+                                    <label class="form-check-label" for="um_inlineCheck2">Pune</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck3" value="Mumbai">
+                                    <label class="form-check-label" for="um_inlineCheck3">Mumbai</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck4" value="Beed">
+                                    <label class="form-check-label" for="um_inlineCheck4">Beed</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck5" value="Aurangabad">
+                                    <label class="form-check-label" for="um_inlineCheck5">Aurangabad</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck6" value="Nashik">
+                                    <label class="form-check-label" for="um_inlineCheck6">Nashik</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck7" value="Satara">
+                                    <label class="form-check-label" for="um_inlineCheck7">Satara</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck8" value="Sawantwadi">
+                                    <label class="form-check-label" for="um_inlineCheck8">Sawantwadi</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck9" value="Nagpur">
+                                    <label class="form-check-label" for="um_inlineCheck9">Nagpur</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="region" id="um_inlineCheck10" value="Dadar">
+                                    <label class="form-check-label" for="um_inlineCheck10">Dadar</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-3">
+                            <label for="um_isDownloadable">Able to download?</label>
+                            <div class="btn-toolbar mb-3" id="um_isDownloadable" role="toolbar" name="isdownloadable" aria-label="Toolbar with button groups">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="downloadable" id="um_yes" value="Yes">
+                                    <label class="form-check-label" for="um_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="downloadable" id="um_no" value="No">
+                                    <label class="form-check-label" for="um_no">No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3">
+                            <button type="submit" class="btn btn-primary editManagerBtn px-3">Submit</button>
+                            <button class="btn btn-dark cancelManagerBtn px-3">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Update Manager Record End -->
+
+            <!-- Delete Manager Record -->
+            <div class="overlay-delete-record d-none">
+                <div class="choice-con row justify-content-center">
+                    <div class="col-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Delete Manager Record</h4>
+                                <p class="card-description">
+                                    Confirm delete manager record
+                                </p>
+                                <div class="choices-delete mt-5 row justify-content-around">
+                                    <button class="confirm-delete col-3 btn btn-success" id="delete-manager">
+                                        Confirm
+                                    </button>
+                                    <button class="cancel-delete col-3 btn btn-outline-danger">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Delete Manager Record -->
+
+
+            <!-- Display records in table -->
+            <div class="container-fluid my-5">
+
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Sr.No.</th>
+                            <th scope="col" hidden>Manager ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Mobile No.</th>
+                            <th scope="col">Region</th>
+                            <th scope="col" hidden>Able To download?</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tablebody">
+                        {% for manager in allManagers %}
+                        <tr class="bg-info">
+                            <td>{{loop.index}}</td>
+                            <td hidden>{{manager.id}}</td>
+                            <td>{{manager.name}}</td>
+                            <td>{{manager.email}}</td>
+                            <td>{{manager.mobile}}</td>
+                            <td>{{allregions[manager.id]}}</td>
+                            <td hidden>{{manager.able_to_download}}</td>
+                            <td>
+                                <button class="edit-form badge badge-outline-success mx-1">
+                                    <i class="icofont-edit"></i>
+                                </button>
+                                <button class="delete-record badge badge-outline-success1 mx-1">
+                                    <i class="icofont-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Table end -->
+            <div style="width: 3rem;">
+            </div>
+        </div>
+    </section>
+    <!-- Section  Add Manager end-->
+
+    <!-- Section upload excel file -->
+    <section id="upload-data" class="services d-none">
+        {% if alert %} {% if alert['section'] == 'upload-data' %}
+        <div class="alert alert-{{alert['type']}} alert-dismissible fade show" role="alert" id="alert">
+            <strong>{{'ERROR : ' if alert['type'] == 'danger' else alert['type'].upper() + ' : '}}</strong> {{alert['message']}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endif %} {% endif %}
+        <div class="container">
+            <form action="admin/uploadData" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="exampleFormControlFile1">Upload excel file here</label>
+                    <input type="file" class="form-control-file" name="excelfile" id="exampleFormControlFile1" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                </div>
+                <div class="form-element">
+                    <button class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </section>
+    <!-- Section upload excel files end -->
+
+    <!-- <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a> -->
+
+    <!-- Vendor JS Files -->
+    <script src="{{ url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='assets/vendor/glightbox/js/glightbox.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/vendor/isotope-layout/isotope.pkgd.min.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script>
+
+    <script src="{{ url_for('static', filename='assets/vendor/php-email-form/validate.js')}}"></script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Template Main JS File -->
+    <script src="{{ url_for('static', filename='assets/js/main.js')}}"></script>
+
+</body>
+
+</html>
