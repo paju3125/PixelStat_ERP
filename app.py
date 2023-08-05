@@ -145,46 +145,6 @@ def verifyUsername():
             }
             return jsonify(login)
 # To send OTP
-def sendOTP(email):
-    otp = random.randrange(100000,999999)
-            
-    sender_email = 'bany@pixelstat.com'
-    password = '#bany2021'
-    receiver_email = email
-
-    message = MIMEMultipart("alternative")
-    message["Subject"] = "PixelStat ERP : OTP (One Time Password)"
-    message["From"] = sender_email
-    message["To"] = receiver_email
-
-    # Create the plain-text and HTML version of your message
-    text = """\
-    Verify your Email address to login ERP"""
-    html = f"""\
-    <html>
-    <body>
-        <h3>Verify your login using OTP</h3>
-        <br>
-        <h3>OTP : {otp}</h3>
-    </body>
-    </html>
-    """
-
-    part1 = MIMEText(text, "plain")
-    part2 = MIMEText(html, "html")
-
-    message.attach(part1)
-    message.attach(part2)
-
-    # Create secure connection with server and send email
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-        server.login(sender_email, password)
-        server.sendmail(
-            sender_email, receiver_email, message.as_string()
-        )
-    return otp
-
 
 def getData(page):
     allManagers = Managers.query.all()
