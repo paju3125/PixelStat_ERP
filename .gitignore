@@ -4,4 +4,10 @@ env/
 vendor/
 instance/
 
+<<<<<<< HEAD
 google captcha keys
+=======
+google captcha keys
+
+__pycache__
+>>>>>>> 154371bc975e26e3502f7273d2c57085f394f586
