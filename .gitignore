@@ -3,3 +3,7 @@ env/
 
 vendor/
 instance/
+
+google captcha keys
+
+__pycache__
