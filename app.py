@@ -9,6 +9,7 @@ import random
 import smtplib
 import ssl
 import flask
+from flask import Flask
 from flask import Flask, redirect,render_template,request, session, jsonify,url_for,send_from_directory,send_file
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime, func,exc
@@ -16,6 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from werkzeug.utils import secure_filename
 import openpyxl
 import os
+
 
 app = Flask(__name__)
 app.secret_key='P@ju3125'
@@ -48,6 +50,14 @@ class Region(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     region = db.Column(db.String(20), nullable=False)
     mid = db.Column(db.Integer, db.ForeignKey('managers.id'))
+
+class LoginHistory(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    mid = db.Column(db.Integer, db.ForeignKey('managers.id'), nullable = False)
+    login_time = db.Column(db.DateTime, nullable = False)
+    
+    def __repr__(self):
+        return f'<LoginHistory Manager ID: {self.mid} - Login Time: {self.login_time}>'
     
 class Excel_data(db.Model):
     fno = db.Column(db.Integer, nullable=True)
@@ -73,7 +83,6 @@ with app.app_context():
     # db.session.add(a)
     db.session.commit()
     
-
 # Redirect to login page
 @app.route('/')
 @app.route('/login')
@@ -105,13 +114,19 @@ def verifyUsername():
                 }
                 return jsonify(login)
             else:
-                user = Managers.query.filter_by(email=username, password=password).first()
+                print(username)
+                user = Managers.query.filter_by(mobile=int(username), password=password).first()
+                print(user.id)
                 if user != None:
-                    otp = sendOTP(username)
+                    login_time = datetime.now()
+                    login_history = LoginHistory(mid = user.id, login_time = login_time) 
+                    db.session.add(login_history)
+                    db.session.commit()
+                    # otp = sendOTP(username)
                     login={
                         'user':'manager',
                         'username':username,
-                        'otp':otp,
+                        # 'otp':otp,
                         'status':True
                     }
                     alert = {
@@ -133,8 +148,8 @@ def verifyUsername():
 def sendOTP(email):
     otp = random.randrange(100000,999999)
             
-    sender_email = 'prajvalgandhi@gmail.com'
-    password = 'wozm dsor odsq wota'
+    sender_email = 'bany@pixelstat.com'
+    password = '#bany2021'
     receiver_email = email
 
     message = MIMEMultipart("alternative")
@@ -187,7 +202,7 @@ def getData(page):
             if page == None:
                 allRecords = Excel_data.query.all()
             else:
-                allRecords = Excel_data.query.paginate(page=page,per_page=4)
+                allRecords = Excel_data.query.paginate(page=page,per_page=10)
         else:
             filtered = {k: v for k, v in filter.items() if v is not None}
             filter.clear()
@@ -199,12 +214,12 @@ def getData(page):
             if page == None:
                 return filteredData, allManagers, allregions, alert
             else:
-                return filteredData.paginate(page=page,per_page=4), allManagers, allregions, alert
+                return filteredData.paginate(page=page,per_page=10), allManagers, allregions, alert
     
     if page == None:
         allRecords = Excel_data.query.all()
     else:
-        allRecords = Excel_data.query.paginate(page=page,per_page=4)
+        allRecords = Excel_data.query.paginate(page=page,per_page=10)
     return allRecords, allManagers, allregions, alert
 
 # To delete all records
@@ -215,8 +230,6 @@ def deleteRecords():
         if loggeduser['user'] == 'admin':
             try:
                 pixelstat = Excel_data.query.delete()
-                print('records deleted')
-                print(pixelstat)
                 db.session.commit()
                 alert={
                     'type':'success',
@@ -229,8 +242,6 @@ def deleteRecords():
                     'message':'Something went wrong','section':'admin'
                 }   
     return redirect('/admin#home')
-
-    
 
 # To create excel file
 @app.route('/admin/downloadFile', endpoint='downloadFile')
@@ -267,8 +278,6 @@ def removeAlert1():
 @app.route('/admin',methods=['GET','POST'])
 def admin():
     global alert
-    # alert = request.args.get('alert')
-    print(alert)
     if 'loggeduser' in request.cookies:
         loggeduser = json.loads(request.cookies['loggeduser'])
         if loggeduser['user'] == 'admin':
@@ -348,8 +357,6 @@ def addRecord():
                     'type':'danger',
                     'message':'Record insertion failed!!!','section':'manager'
                 }
-                
-            print(e)
         
         except:
             pass
@@ -372,8 +379,7 @@ def updateRecord():
         dob = request.form.get('dob')
         region = request.form.get('region')
         renewal_status = request.form['renewal_status']
-        renewal_status=False if renewal_status=='0' else True
-                
+        renewal_status=False if renewal_status=='0' else True       
         try:
             cnm = request.form.get('cnm')
             mnm = request.form.get('mnm')
@@ -443,7 +449,6 @@ def updateRecord():
                     }
                 
         except exc.SQLAlchemyError as e:
-            print(e)
             db.session.rollback()
             if 'admin' in request.url_rule.rule:
                 alert={
@@ -454,8 +459,7 @@ def updateRecord():
                 alert={
                     'type':'danger',
                     'message':'Record updation failed','section':'manager'
-                }  
-            print(e)
+                }
         except:
             pass
             
@@ -489,7 +493,7 @@ def deleteRecord():
 
 # To get all data required for manager homepage
 def getManagerData(loggeduser,page):
-    manager = Managers.query.filter_by(email=loggeduser['username']).all()
+    manager = Managers.query.filter_by(mobile=int(loggeduser['username'])).all()
     regions = Region.query.filter_by(mid=manager[0].id).all()
     allregions = []
     for region in regions:
@@ -511,12 +515,12 @@ def getManagerData(loggeduser,page):
             if page == None:
                 return filteredData,allregions,manager
             else:
-                return filteredData.paginate(page=page,per_page=4),allregions,manager
+                return filteredData.paginate(page=page,per_page=10),allregions,manager
     
     if page == None:
         allRecords = Excel_data.query.filter(Excel_data.region.in_(allregions)).all()
     else:
-        allRecords = Excel_data.query.filter(Excel_data.region.in_(allregions)).paginate(page=page,per_page=4)
+        allRecords = Excel_data.query.filter(Excel_data.region.in_(allregions)).paginate(page=page,per_page=10)
     return allRecords,allregions,manager
 
 # Redirect to manager homepage
@@ -566,7 +570,6 @@ def addManager():
                 'type':'danger',
                 'message':'Something went wrong. Try again!','section':'manager'
             }
-            print(e)
         except:
             pass
     return redirect('/admin#addManager')
@@ -587,7 +590,6 @@ def updateManager():
             isdownloadable=False
         else:
             isdownloadable = True
-
         try:
             region = Region.query.filter_by(mid=id).delete()
             db.session.commit()
@@ -607,7 +609,6 @@ def updateManager():
                 'type':'danger',
                 'message':'Something went wrong. Try again!','section':'manager'
             }
-            print(e)
         except:
             pass
             
@@ -656,6 +657,7 @@ def uploadData():
         inserted = False
         records = []
         
+        count=0
         for i in range(2, row+1):
             record = []
             for j in range(2, column+1):
@@ -663,14 +665,25 @@ def uploadData():
                 record.append(cell_obj.value)
             # if len(record)==16 and record[1]!=None:
             if record[1]!=None:
-                # print(len(record))
-                # print(record)
                 try:
-                    r_status = ('FALSE' if record[12]=='0' else record[12])
-                    pixelstat=Excel_data(fno=record[0], member_no=record[1], membership_type=record[2],company_name=record[3],member_name=record[4],contact=record[5],email=record[6],address=record[7],dob=datetime.strptime(record[8], '%d/%m/%Y'),member_Category=record[9],membership_date=datetime.strptime(record[10], '%d/%m/%Y'),region=record[11],renewal_date=datetime.strptime(record[12], '%d/%m/%Y'),renewal_amount=record[13])
+                    r_date = datetime.strptime(record[12], '%d/%m/%Y')
+                except:
+                    r_date = None
+                try:
+                    dob = datetime.strptime(record[8], '%d/%m/%Y')
+                except:
+                    dob = None
+                try:
+                    m_date = datetime.strptime(record[10], '%d/%m/%Y')
+                except:
+                    m_date = None
+                try:
+                    # r_status = ('FALSE' if record[12]=='0' else record[12])
+                    pixelstat=Excel_data(fno=record[0], member_no=record[1], membership_type=record[2],company_name=record[3],member_name=record[4],contact=record[5],email=record[6],address=record[7],dob=dob,member_Category=record[9],membership_date=m_date,region=record[11],renewal_date=r_date,renewal_amount=record[13])
                     db.session.add(pixelstat)
                     db.session.commit() 
                     inserted = True
+                    count+=1
                 except IntegrityError as e:
                     db.session.rollback()
                 except:
@@ -690,6 +703,29 @@ def uploadData():
             return redirect('/admin#upload-data')                    
     return redirect('/admin')
 
+# To fetch Login History of managers
+@app.route('/getLoginHistory')
+def getLoginHistory():
+    managers = Managers.query.all()
+    login_history = LoginHistory.query.all()
+    
+    managers_df = pd.DataFrame([(m.id, m.name, m.mobile, m.email) for m in managers], columns=['Manager ID', "Manager Name", "Manager Mobile", "Manager Email"])
+    
+    login_history_df = pd.DataFrame([(lh.mid, lh.login_time) for lh in login_history], columns=['Manager ID', 'Login Time'])
+    
+    merged_df = managers_df.merge(login_history_df, on="Manager ID", how='left')
+    
+    merged_df['Login Time'].fillna('N/A', inplace=True)
+    
+    excel_writer = pd.ExcelWriter('login_history.xlsx', engine='openpyxl')
+    merged_df.to_excel(excel_writer, sheet_name='Managers_Login_History', index=False)
+    
+    excel_writer.close()
+    
+    return send_file('login_history.xlsx', as_attachment=True)
+# # main function
+# if __name__ == '__main__':
+#     app.run(host="0.0.0.0",port=80)
 
 # main function
 if __name__ == '__main__':

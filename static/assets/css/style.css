@@ -2,6 +2,7 @@
 # General
 --------------------------------------------------------------*/
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400&display=swap');
 body {
     font-family: "Open Sans", sans-serif;
     color: #444444;
@@ -25,6 +26,10 @@ h4,
 h5,
 h6 {
     font-family: "Nunito", sans-serif;
+}
+
+.disGo {
+    display: none;
 }
 
 
@@ -71,7 +76,9 @@ h6 {
     transition: all 0.5s;
     z-index: 997;
     padding: .8rem 0;
-    background: rgba(0, 0, 0, 0.9);
+    background: rgb(212 199 197 / 23%);
+    border-bottom: 8px solid black;
+    position: static;
 }
 
 #header .logo {
@@ -79,9 +86,16 @@ h6 {
     margin: 0;
     padding: 0;
     line-height: 1;
-    font-weight: 600;
-    letter-spacing: 1px;
     text-transform: uppercase;
+    background-image: url(/static/assets/img/abmcm_logo.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    height: 60px;
+    width: 280px;
+    display: inline-block;
+    /* border: 1px solid red; */
 }
 
 #header .logo a {
@@ -107,19 +121,18 @@ h6 {
 
 #header button {
     align-items: center;
-    background-color: #FFE7E7;
+    background-color: black;
     background-position: 0 0;
-    border: 1px solid #FEE0E0;
-    border-radius: 11px;
+    border: 0px solid #FEE0E0;
+    border-radius: 2px;
     box-sizing: border-box;
-    color: #D33A2C;
+    color: white;
     cursor: pointer;
     display: flex;
-    font-size: 1.1rem;
-    font-weight: 750;
-    line-height: 33.4929px;
-    list-style: outside url(https://www.smashingmagazine.com/images/bullet.svg) none;
-    padding: .1rem 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 20px;
+    font-weight: bolder;
     text-align: left;
     text-decoration: none;
     text-shadow: none;
@@ -145,13 +158,13 @@ h6 {
 }
 
 #header button:hover {
-    background-color: #FFE3E3;
-    border-color: #FAA4A4;
+    background-color: #b9babe;
+    border-color: #dfe1e6;
 }
 
 #header button:active:hover,
 #header button:focus:hover {
-    background-color: #D33A2C;
+    background-color: #5f5f61;
     box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px 0 inset;
     color: #FFFFFF;
 }
@@ -175,16 +188,21 @@ h6 {
     padding: 0;
     display: flex;
     list-style: none;
-    align-items: center;
+    align-items: right;
 }
 
 .navbar li {
     position: relative;
+    border-right: 2px solid #893f24;
+    ;
 }
 
 .navbar>ul>li {
     white-space: nowrap;
-    padding: 10px 0 10px 24px;
+    padding: 10px 10px 10px 24px;
+    border-bottom: 2px solid #893f24;
+    ;
+    margin-right: 4%;
 }
 
 .navbar a,
@@ -193,7 +211,7 @@ h6 {
     align-items: center;
     justify-content: space-between;
     font-family: "Poppins", sans-serif;
-    color: #fff;
+    color: black;
     font-size: 15px;
     padding: 0 4px;
     white-space: nowrap;
@@ -309,7 +327,8 @@ table td {
 }
 
 #alert {
-    margin-top: 3rem;
+    margin-top: -3rem;
+    margin-bottom: 2rem;
 }
 
 #home {
@@ -321,9 +340,10 @@ table td {
 }
 
 #filter {
-    margin-top: 4rem;
-    padding: 2rem 1rem;
-    background-color: #000;
+    margin-top: -3rem;
+    padding: 12px 68px;
+    background-color: #dbcece;
+    max-width: 100%;
 }
 
 #filter form {
@@ -380,11 +400,11 @@ table td {
     max-height: 55rem;
     background-color: #fff;
     position: relative;
-    padding-top: 3rem;
 }
 
 #addManager .heading {
     font-weight: 1000;
+    font-family: "Nunito", sans-serif;
 }
 
 #addManager table {
@@ -394,8 +414,21 @@ table td {
 #addManagerForm {
     width: 100%;
     padding: 2rem;
-    border: 2px solid #000;
+    border: 2px solid #893f24;
     border-radius: .5rem;
+}
+
+#adddata {
+    width: 60%;
+    padding: 2rem;
+    border: 2px solid #893f24;
+    border-radius: 0.5rem;
+    background-color: #f9f6f6;
+}
+
+#addManager .loginHistoryBtn {
+    padding: .5rem 1.5rem;
+    font-weight: 700;
 }
 
 #upload-data {
@@ -408,7 +441,7 @@ table td {
     width: 100%;
     height: 100%;
     margin: auto;
-    display: flex;
+    /* display: flex; */
     align-items: center;
     justify-content: center;
 }
@@ -462,20 +495,24 @@ table td {
     flex-direction: column;
     min-width: 0;
     word-wrap: break-word;
-    background-color: #191c24 !important;
+    background-color: #dfe1e6 !important;
     background-clip: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.125);
+    border: 1px solid rgba(243, 241, 241, 0.125);
     border-radius: 0.25rem;
+    height: 60px;
+    margin-top: -1rem;
 }
 
 .card .card-body {
-    padding: 1.75rem 1.5625rem;
+    /* padding: 1.75rem 1.5625rem; */
+    background-color: #6b6969;
+    border: 1px solid black
 }
 
 .card-body {
     flex: 1 1 auto;
-    min-height: 1px;
-    padding: 1.25rem;
+    /* min-height: 1px; */
+    /* padding: 1.25rem; */
 }
 
 .card .card-title {
@@ -491,10 +528,13 @@ table td {
 }
 
 .card li {
-    width: 11rem;
-    padding: 0;
+    width: 14rem;
+    padding: 20px;
     font-size: .8rem;
+    font-weight: bold;
     text-overflow: clip;
+    display: inline-flex;
+    /* border: 1px solid #102027; */
 }
 
 .card li span {
@@ -516,7 +556,7 @@ p {
 
 .overlay-edit-form .edit-record,
 .overlay-add-form .add-record {
-    width: 60rem;
+    width: 40rem;
     height: 85vh;
     margin-top: 3rem;
     background-color: #fff;
@@ -534,7 +574,8 @@ p {
 .overlay-edit-form .card-title,
 .overlay-add-form .card-title {
     font-weight: 800;
-    border-bottom: 2px solid black;
+    font-family: "Nunito", sans-serif;
+    border-bottom: 4px solid #893f24;
 }
 
 
@@ -563,7 +604,20 @@ p {
 }
 
 table tbody td {
-    font-weight: 700;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 13px;
+    color: #000;
+}
+
+table thead th {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 12px;
+}
+
+table thead {
+    border-color: white;
+    background-color: black;
+    color: white;
 }
 
 
@@ -626,4 +680,26 @@ table tbody td {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 5px black;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+.btn-infoOver {
+    color: #fff;
+    background-color: #000;
+    border-color: #000;
+}
+
+.edit-formover {
+    border: none;
+    background: transparent;
+    font-size: 20px;
 }

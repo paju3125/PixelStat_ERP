@@ -20,7 +20,7 @@ body {
     margin-top: auto;
     margin-bottom: auto;
     width: 25rem;
-    background-color: rgba(0, 0, 0, 0.5) !important;
+    background-color: #ede4e4a6;
 }
 
 .social_icon span {
@@ -129,7 +129,10 @@ input:focus {
     border: 2px solid #FFC312
 }
 
-
+.form-control{
+    background-color: #ffffff70!important;
+    border-radius: 0px;
+}
 /* #otp-form .validate {
     border-radius: .2rem;
     height: 3.5rem;
@@ -146,7 +149,6 @@ input:focus {
     height: 1rem;
     position: absolute;
 }
-
 
 /* Spinner */
 

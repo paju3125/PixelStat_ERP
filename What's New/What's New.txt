@@ -1,3 +1,5 @@
 1.  Added Pagination to view records in both Admin and Manager page. [At a time only 4 records will display].
 2.  Added preloader to let users know that the website hasn't crashed, it's just processing data.
 3.  Removed bugs regarding alert messages. Added some messages while verifying user login.
+4. Removed sendOTP functionality for manager login
+5. Storing the Login History on backend and admin is now able to see login History of Managers

@@ -38,7 +38,7 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
 
 </head>
@@ -48,19 +48,17 @@
     <!-- ======= Header ======= -->
     <header id="header" class="fixed-top ">
         <div class="container d-flex align-items-center justify-content-between">
-
-            <h1 class="logo"><a href="/">PixelStat</a></h1>
+            <h1 class="logo"><a href="/admin"> </a></h1>
             <!-- Uncomment below if you prefer to use an image logo -->
             <!-- <a href="index.html" class="logo"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
             <nav id="navbar" class="navbar">
                 <ul>
                     <li><a class="nav-link scrollto active" href="#home">Dashboard</a></li>
-                    <li><a class="nav-link scrollto logout" href="#logout">Logout</a></li>
-
                 </ul>
                 <i class="bi bi-list mobile-nav-toggle"></i>
             </nav>
+            <button><a class="nav-link scrollto logout" href="#logout">Logout</a></button>
             <!-- .navbar -->
         </div>
     </header>
@@ -88,7 +86,7 @@
             <form class="d-flex flex-row bd-highlight mb-3 d-inline" id="filterForm">
                 <div class="p-2 bd-highlight">
                     <select class="form-select" name="region" aria-label="Default select example">
-                        <option value=0 selected>region</option>
+                        <option value=0 selected>Region</option>
                         {% for region in allregions %}
                         <option value={{region}}>{{region}}</option>
                         {% endfor %}
@@ -112,32 +110,33 @@
                   </button>
                 </div>
             </form>
-
-            <div class="d-inline mr-3" style="width: fit-content;">
+            <div class="p-2 bd-highlight" style="width: fit-content;">
                 <button class="btn btn-primary" id="add-new-record-btn">
-                      Add new entry
-                    </button>
+                    Add New Entry
+                </button>
             </div>
-            <div class="card">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-black text-light"><span class="badge badge-primary"> </span> - Individual A</li>
-                    <li class="list-group-item bg-black text-light"><span class="badge badge-success"> </span> - Individual B</li>
-                    <li class="list-group-item bg-black text-light"><span class="badge badge-warning"> </span> - Not Renewed</li>
-                    <li class="list-group-item bg-black text-light"><span class="badge badge-danger"> </span> - Lifetime Membership</li>
-                </ul>
-            </div>
+            
         </div>
+        <div class="card">
+            <ul class=" ">
+                <li class=" "><span class="badge badge-primary"> </span>  - Individual A</li>
+                <li class=""><span class="badge badge-success"> </span>  - Individual B</li>
+                <li class=""><span class="badge badge-warning"> </span>  - Not Renewed</li>
+                <li class=""><span class="badge badge-danger"> </span>  - Lifetime Membership
+                </li>
+            </ul>
+        </div>
+        <br>
         <!-- Filter end -->
-
-
+        <br>
         <!-- Display records in table -->
-        <div class="container-fluid mb-3">
-
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">FNO</th>
-                        <th scope="col">Member No.</th>
+        <div class="container">
+            <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead>
+                    <tr class="text-center" style="font-size:16px;">
+                        <th scope="col" class="disGo">FNO</th>
+                        <th scope="col">Mem. No.</th>
                         <th scope="col">Type</th>
                         <th scope="col">Member Name</th>
                         <th scope="col">Company Name</th>
@@ -145,24 +144,24 @@
                         <th scope="col">Email</th>
                         <th scope="col">Address</th>
                         <th scope="col">DOB</th>
-                        <th scope="col">Member Category</th>
+                        <th scope="col">Mem. Cat</th>
                         <th scope="col">Region</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody class="tablebody">
                     {% for record in allRecords.items %} {% if record.membership_type == 'Individual A' %} {% if record.renewal_status == False %}
-                    <tr class="bg-warning bg-gradient text-light">
+                    <tr>
                         {% else %} {% if (current_date-record.membership_date).days > (365*6)%}
-                        <tr class="bg-danger bg-gradient text-light">
+                        <tr>
                             {% else %}
-                            <tr class="bg-primary bg-gradient text-light">
+                            <tr>
                                 {% endif %} {% endif %} {% elif record.membership_type == 'Individual B' %}
-                                <tr class="bg-success bg-gradient text-light">
+                                <tr>
                                     {% else %}
                                     <tr>
                                         {% endif %}
-                                        <td>{{record.fno}}</td>
+                                        <td class="disGo">{{record.fno}}</td>
                                         <td>{{record.member_no}}</td>
                                         <td>{{record.membership_type}}</td>
                                         <td>{{record.member_name}}</td>
@@ -178,60 +177,56 @@
                                         <td class="d-none">{{record.renewal_date}}</td>
                                         <td class="d-none">{{record.renewal_amount}}</td>
                                         <td>
-                                            <button class="mg-edit-form badge badge-outline-success mx-1">
-                                    <i class="icofont-edit"></i>
+                                <button class="mg-edit-form edit-formover mx-1">
+                                    <i class="fa fa-edit"></i>
                                 </button>
                                         </td>
                                     </tr>
                                     {% endfor %}
                 </tbody>
             </table>
-
+         </div>
+         <br>
             {% for page_num in allRecords.iter_pages(left_edge=1,right_edge=1,left_current=1,right_current=2)%} {% if page_num %} {% if allRecords.page == page_num%}
             <a class="btn btn-info mb-4" href="{{url_for('manager',page=page_num)}}">{{page_num}}</a> {% else %}
             <a class="btn btn-outline-info mb-4" href="{{url_for('manager',page=page_num)}}">{{page_num}}</a> {% endif %} {% else %} ... {% endif %} {% endfor %} {% if manager.able_to_download %}
             <button class="btn btn-primary float-right mb-2"><i class="icofont-download"> </i><a href="{{url_for('downloadFile',page=page_num)}}" class="text-light">Download</a></button> {% endif %}
         </div>
-
+        <br>
+<br>
+<br>
+<br>
+<br>
         <!-- Table end -->
-
         <!-- To add new record -->
         <section class="overlay-add-form d-none">
             <div class="container add-record">
-
                 <h4 class="card-title">Add New Record</h4>
                 <form class="forms-sample my-3" method="post" action="manager/addRecord" id="add-record-form">
                     <div class="mb-3">
-                        <label for="mno" class="form-label">Member Number</label>
-                        <input type="number" class="form-control" name="mno" id="mno" min="10000" max="99999999" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="cnm" class="form-label">Company Name</label>
-                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="cnm" id="cnm" required>
+                        <input type="number" class="form-control" name="mno" placeholder="Enter Member Number" id="mno" required>
                     </div>
                     <div class="mb-3">
-                        <label for="mnm" class="form-label">Member Name</label>
-                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="mnm" id="mnm" required>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="cnm" placeholder="Enter Company Name" id="cnm" required>
                     </div>
                     <div class="mb-3">
-                        <label for="contact" class="form-label">Contact Number</label>
-                        <input type="number" class="form-control" pattern="[0-9]{10}" name="contact" id="contact" min="1000000000" max="9999999999" required>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="mnm" placeholder="Enter Member Name" id="mnm" required>
                     </div>
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" class="form-control" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" id="email" required>
+                        <input type="number" class="form-control" pattern="[0-9]{10}" name="contact" placeholder="Enter Contact Number" id="contact" min="1000000000" max="9999999999" required>
                     </div>
                     <div class="mb-3">
-                        <label for="addr" class="form-label">Address</label>
-                        <textarea class="form-control" name="address" id="addr" required></textarea>
+                        <input type="email" class="form-control" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" placeholder="Enter Email Id" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" name="address" placeholder="Enter Address" id="addr" required></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="dob" class="form-label">Date of Birth</label>
                         <input type="date" class="form-control" name="dob" id="dob" required/>
                     </div>
                     <div class="mb-3">
-                        <label for="category" class="form-label">Member Category</label>
+                        <label for="category" class="form-label">Select Member Category</label>
                         <select class="form-select" name="category" id="category" size="5" aria-label="size 3 select example" required\>
                             <option selected>Actor</option>
                             <option value="1">Actress</option>
@@ -282,7 +277,7 @@
                         <input type="date" class="form-control" name="membership_date" id="membership_date" required/>
                     </div>
                     <div class="mb-3">
-                        <label for="region" class="form-label">Region</label>
+                        <label for="region" class="form-label">Select Region</label>
                         <select class="form-select" name="region" id="region" size="5" aria-label="size 5 select example" required>
                         {% for region in allregions %}
                             {% if loop.index == 1 %}
@@ -317,7 +312,6 @@
         <!-- To update record -->
         <section class="overlay-edit-form d-none">
             <div class="container edit-record">
-
                 <h4 class="card-title">Update Record</h4>
                 <form class="forms-sample my-3" id="edit-record-form" method="post" action="manager/updateRecord">
                     <div class="mb-3">
@@ -336,7 +330,6 @@
                         <label for="ur_contact" class="form-label">Contact Number</label>
                         <input type="number" name="contact" pattern="[0-9]{10}" class="form-control" id="ur_contact" min="1000000000" max="9999999999">
                     </div>
-
                     <div class="mb-3">
                         <label for="ur_addr" class="form-label">Address</label>
                         <textarea class="form-control" name="address" id="ur_addr"></textarea>
@@ -345,7 +338,6 @@
                         <label for="ur_dob" class="form-label">Date of Birth</label>
                         <input type="date" name="dob" class="form-control" id="ur_dob" />
                     </div>
-
                     <div class="mb-3">
                         <label for="ur_region" class="form-label">Region</label>
                         <select class="form-select" id="ur_region" size="5" name="region" aria-label="size 5 select example">
@@ -358,12 +350,10 @@
                         {% endfor %}
                           </select>
                     </div>
-
                     <!-- <div class="mb-3">
                         <label for="ur_membership_date" class="form-label">Membership Date</label>
                         <input type="date" class="form-control" name="membership_date" id="ur_membership_date" required/>
                     </div> -->
-
                     <div class="mb-3">
                         <label for="Urenewal_status" class="form-label">Renewal Status</label>
                         <select class="form-select" name="renewal_status" id="Urenewal_status" aria-label="Default select example" required>
@@ -379,16 +369,28 @@
                         <label for="Urenewal_amount" class="form-label">Renewal Amount</label>
                         <input type="number" name="renewal_amount" class="form-control" pattern="[0-9]{10}" id="Urenewal_amount" readonly required>
                     </div>
-
-                    <button type="submit" class="btn btn-primary me-2 add-dept-btn">Submit</button>
+                    <button type="submit" class="btn btn-primary me-2 add-dept-btn">Update</button>
                     <button class="btn btn-dark cancel-dept-btn">Cancel</button>
                 </form>
             </div>
         </section>
-
     </section>
     <!-- End home -->
     <section id="logout"></section>
+    <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="footer">
+    <p>
+        Powered By
+        <a href="https://pixelstat.com/" >
+            PIXELSTAT
+        </a>
+    </p>
+  </div>
 
     <!-- <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a> -->
 

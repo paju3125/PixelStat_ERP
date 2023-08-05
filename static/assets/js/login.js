@@ -51,33 +51,40 @@
                                 $('#login-section').remove('.alert')
                                 window.location.href = ('admin')
                             } else if (login['user'] == 'manager') {
-                                $('#login-section .alert').removeClass('alert-danger');
-                                $('#login-section .alert').addClass('alert-success');
-                                $('#login-section .alert strong').text('Verified... OTP sent on your email ID.')
-                                $('#login-section .login').addClass('d-none')
-                                $('#login-section .otp').removeClass('d-none')
+                                let loggeduser = {
+                                    'user': login['user'],
+                                    'username': login['username']
+                                }
+                                document.cookie = "loggeduser=" + JSON.stringify(loggeduser)
+                                $('#login-section').remove('.alert')
+                                window.location.href = ('manager')
+                                    // $('#login-section .alert').removeClass('alert-danger');
+                                    // $('#login-section .alert').addClass('alert-success');
+                                    // $('#login-section .alert strong').text('Verified... OTP sent on your email ID.')
+                                    // $('#login-section .login').addClass('d-none')
+                                    // $('#login-section .otp').removeClass('d-none')
 
-                                $('#login-section .otp .validate').click(function() {
-                                    const inputs = document.querySelectorAll('#otp > *[id]');
-                                    let otp = ''
-                                    inputs.forEach(input => {
-                                        otp += input.value
-                                    });
-                                    if (otp == login['otp']) {
-                                        let loggeduser = {
-                                            'user': login['user'],
-                                            'username': login['username']
-                                        }
-                                        document.cookie = "loggeduser=" + JSON.stringify(loggeduser)
-                                        $('#login-section').remove('.alert')
-                                        window.location.href = ('manager')
-                                    } else {
-                                        $('#login-section .alert').removeClass('alert-success');
-                                        $('#login-section .alert').addClass('alert-danger');
-                                        $('#login-section .alert strong').text('Invalid OTP')
-                                        inputs[5].focus()
-                                    }
-                                })
+                                // $('#login-section .otp .validate').click(function() {
+                                //     const inputs = document.querySelectorAll('#otp > *[id]');
+                                //     let otp = ''
+                                //     inputs.forEach(input => {
+                                //         otp += input.value
+                                //     });
+                                //     if (otp == login['otp']) {
+                                //         let loggeduser = {
+                                //             'user': login['user'],
+                                //             'username': login['username']
+                                //         }
+                                //         document.cookie = "loggeduser=" + JSON.stringify(loggeduser)
+                                //         $('#login-section').remove('.alert')
+                                //         window.location.href = ('manager')
+                                //     } else {
+                                //         $('#login-section .alert').removeClass('alert-success');
+                                //         $('#login-section .alert').addClass('alert-danger');
+                                //         $('#login-section .alert strong').text('Invalid OTP')
+                                //         inputs[5].focus()
+                                //     }
+                                // })
                             }
                         } else {
                             $('#login-section .alert').removeClass('alert-success');
@@ -91,11 +98,11 @@
         }
     })
 
-    $('#otp-form .back-to-login').click(function(e) {
-        e.preventDefault()
-        $('#login-section .login').removeClass('d-none')
-        $('#login-section .otp').addClass('d-none')
-    })
+    // $('#otp-form .back-to-login').click(function(e) {
+    //     e.preventDefault()
+    //     $('#login-section .login').removeClass('d-none')
+    //     $('#login-section .otp').addClass('d-none')
+    // })
 
 })()
 
