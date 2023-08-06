@@ -1,4 +1,4 @@
-# PixelStat_ERP - In Collaboration PixelStat eSolutions Company
+# PixelStat_ERP - In Collaboration with PixelStat eSolutions Company
 
 ## Worked as a Full Stack Intern in PixelStat eSolutions
 #### Designed and Developed a web application for one of the clients of PixelStat company.
