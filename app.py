@@ -1,10 +1,10 @@
 import pandas as pd
 from datetime import datetime
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from http import cookies
 import json
 from multiprocessing.dummy import Manager
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import random
 import smtplib
 import ssl
@@ -148,8 +148,8 @@ def verifyUsername():
 def sendOTP(email):
     otp = random.randrange(100000,999999)
             
-    sender_email = 'bany@pixelstat.com'
-    password = '#bany2021'
+    sender_email = 'Your Email'
+    password = 'Your Password'
     receiver_email = email
 
     message = MIMEMultipart("alternative")
@@ -305,29 +305,40 @@ def addRecord():
         category = request.form['category']
         membership_date = request.form['membership_date']
         
-        # To find membership type
-        days = datetime.now()-datetime. strptime(membership_date, '%Y-%m-%d')
-        if days.days > (365*3):
-            type='Individual A'
-        else:
-            type='Individual B'
+        try:
+            dob = datetime.strptime(dob, '%Y-%m-%d')
+        except:
+            dob = None
+        try:
+            membership_date = datetime.strptime(membership_date, '%Y-%m-%d')
+            # To find membership type
+            days = datetime.now()-membership_date
+            if days.days > (365*3):
+                type='Individual A'
+            else:
+                type='Individual B'
+        except:
+            membership_date = None
+            type = None
+        
             
         region = request.form['region']
         renewal_status = request.form['renewal_status']
         renewal_status=False if renewal_status=='0' else True
-        fno = db.session.query(func.max(Excel_data.fno)).all()
-        if fno[0][0] == None:
-            fno=1
-        else:
-            fno=(fno[0][0])+1
+        # fno = db.session.query(func.max(Excel_data.fno)).all()
+        # print(fno)
+        # if fno[0][0] == None:
+        #     fno=1
+        # else:
+        #     fno=(fno[0][0])+1
         
         try:
             if int(renewal_status)==1:
                 renewal_date = request.form['renewal_date']
                 renewal_amount = request.form['renewal_amount']
-                pixelstat=Excel_data(fno=fno, member_no=mno, membership_type=type,company_name=cnm,member_name=mnm,contact=contact,email=email,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),member_Category=category,membership_date=datetime.strptime(membership_date, '%Y-%m-%d'),region=region,renewal_status=renewal_status,renewal_date=datetime.strptime(renewal_date, '%Y-%m-%d'),renewal_amount=renewal_amount)
+                pixelstat=Excel_data(member_no=mno, membership_type=type,company_name=cnm,member_name=mnm,contact=contact,email=email,address=address,dob=dob,member_Category=category,membership_date=membership_date,region=region,renewal_status=renewal_status,renewal_date=datetime.strptime(renewal_date, '%Y-%m-%d'),renewal_amount=renewal_amount)
             else:
-                pixelstat=Excel_data(fno=fno, member_no=mno, membership_type=type,company_name=cnm,member_name=mnm,contact=contact,email=email,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),member_Category=category,membership_date=datetime.strptime(membership_date, '%Y-%m-%d'),region=region,renewal_status=renewal_status)
+                pixelstat=Excel_data(member_no=mno, membership_type=type,company_name=cnm,member_name=mnm,contact=contact,email=email,address=address,dob=dob,member_Category=category,membership_date=membership_date,region=region,renewal_status=renewal_status)
                 
             db.session.add(pixelstat)
             db.session.commit()
@@ -344,8 +355,21 @@ def addRecord():
                     'section':'manager'
                 }
                 
-                
+        except exc.IntegrityError as err:
+            print(err)
+            if 'admin' in request.url_rule.rule:
+                alert = {
+                    'type':'danger',
+                    'message':'Record insertion failed - Member No. should be unique',
+                    'section':'admin'
+                }
+            else:
+                alert = {
+                    'type':'danger',
+                    'message':'Record insertion failed - Member No. should be unique','section':'manager'
+                }
         except exc.SQLAlchemyError as e:
+            # print(e)
             if 'admin' in request.url_rule.rule:
                 alert = {
                     'type':'danger',
@@ -373,32 +397,34 @@ def updateRecord():
     global alert
     alert=None
     if request.method == 'POST':
-        mno = request.form['mno']
-        contact = request.form.get('contact')
-        address = request.form.get('address')
-        dob = request.form.get('dob')
-        region = request.form.get('region')
-        renewal_status = request.form['renewal_status']
-        renewal_status=False if renewal_status=='0' else True       
         try:
+            mno = request.form['mno']
+            contact = request.form.get('contact')
+            address = request.form.get('address')
+            dob = request.form.get('dob')
+            region = request.form.get('region')
+            renewal_status = request.form['renewal_status']
+            renewal_status=False if renewal_status=='0' else True       
             cnm = request.form.get('cnm')
             mnm = request.form.get('mnm')
             email = request.form.get('email')
             m_date = request.form.get('membership_date')
             category = request.form.get('category')
+            type = None
             # To find membership type
             if(m_date):
-                days = datetime.now()-datetime.strptime(m_date, '%Y-%m-%d')
+                m_date = datetime.strptime(m_date, '%Y-%m-%d')
+                days = datetime.now()-m_date
                 if days.days > (365*3):
                     type='Individual A'
                 else:
                     type='Individual B'
-            if (not mnm):
+            if not mnm:
                 mnm=0
             if not cnm:
                 cnm=0
             if not dob:
-                dob=0
+                dob=None
             if not email:
                 email=0
             if not contact:
@@ -406,36 +432,44 @@ def updateRecord():
             if not address:
                 address=0
             if not m_date:
-                m_date=0
+                m_date=None
             if not category:
                 category=0
-        except:
-            pass
+        except Exception as err:
+            print(err)
         
         try:
+            if dob:
+                dob = datetime.strptime(dob, '%Y-%m-%d')
+            
             if 'admin' in request.url_rule.rule:
                 if int(renewal_status):
                     renewal_date = request.form.get('renewal_date')
                     renewal_amount = request.form.get('renewal_amount')
                     if not renewal_date:
-                        renewal_date=0
+                        renewal_date=None
                     if not renewal_amount:
                         renewal_amount=0
-                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(membership_type=type,member_name=mnm,company_name=cnm,contact=contact,email=email,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),member_Category=category,membership_date=datetime.strptime(m_date, '%Y-%m-%d'),region=region,renewal_status=renewal_status,renewal_date=datetime.strptime(renewal_date, '%Y-%m-%d'),renewal_amount=renewal_amount))  
+                    if renewal_date:
+                        renewal_date = datetime.strptime(renewal_date, '%Y-%m-%d')
+                    
+                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(membership_type=type,member_name=mnm,company_name=cnm,contact=contact,email=email,address=address,dob=dob,member_Category=category,membership_date=m_date,region=region,renewal_status=renewal_status,renewal_date=renewal_date,renewal_amount=renewal_amount))  
                 else:
-                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(membership_type=type,member_name=mnm,company_name=cnm,contact=contact,email=email,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),member_Category=category,membership_date=datetime.strptime(m_date, '%Y-%m-%d'),region=region,renewal_status=renewal_status))  
+                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(membership_type=type,member_name=mnm,company_name=cnm,contact=contact,email=email,address=address,dob=dob,member_Category=category,membership_date=m_date,region=region,renewal_status=renewal_status))  
                     
             elif 'manager' in request.url_rule.rule:
                 if int(renewal_status):
                     renewal_date = request.form.get('renewal_date')
                     renewal_amount = request.form.get('renewal_amount')
                     if not renewal_date:
-                        renewal_date=0
+                        renewal_date=None
                     if not renewal_amount:
                         renewal_amount=0
-                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(contact=contact,company_name=cnm,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),region=region,renewal_status=renewal_status,renewal_date=datetime.strptime(renewal_date, '%Y-%m-%d'),renewal_amount=renewal_amount))  
+                    if renewal_date:
+                        renewal_date = datetime.strptime(renewal_date, '%Y-%m-%d')
+                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(contact=contact,company_name=cnm,address=address,dob=dob,region=region,renewal_status=renewal_status,renewal_date=renewal_date,renewal_amount=renewal_amount))  
                 else:
-                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(company_name=cnm,contact=contact,address=address,dob=datetime.strptime(dob, '%Y-%m-%d'),region=region,renewal_status=renewal_status))  
+                    Excel_data.query.filter_by(member_no=int(mno)).update(dict(company_name=cnm,contact=contact,address=address,dob=dob,region=region,renewal_status=renewal_status))  
             db.session.commit()
             if 'admin' in request.url_rule.rule:
                 alert={
@@ -450,6 +484,7 @@ def updateRecord():
                 
         except exc.SQLAlchemyError as e:
             db.session.rollback()
+            print(e)
             if 'admin' in request.url_rule.rule:
                 alert={
                     'type':'danger',
@@ -460,8 +495,8 @@ def updateRecord():
                     'type':'danger',
                     'message':'Record updation failed','section':'manager'
                 }
-        except:
-            pass
+        except Exception as e:
+            print(e)
             
     if 'admin' in request.url_rule.rule:
         return redirect('/admin#home')
@@ -685,8 +720,10 @@ def uploadData():
                     inserted = True
                     count+=1
                 except IntegrityError as e:
+                    print(e)
                     db.session.rollback()
-                except:
+                except Exception as err:
+                    print(err)
                     db.session.rollback()
                 
         if inserted:

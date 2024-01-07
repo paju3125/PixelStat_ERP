@@ -252,84 +252,76 @@
                     <div class="mb-3">
                         <input type="number" class="form-control" name="mno" placeholder="Enter Member Number" id="mno" required>
                     </div>
-                    <!-- <div class="mb-3">
-                        <label for="type" class="form-label">Type of Membership</label>
-                        <select class="form-select" name="type" id="type" aria-label="Default select example">
-                            <option value="Individual B" selected>Individual B</option>
-                            <option value="Individual A">Individual A</option>
-                            <option value="Company Sole">Company Sole</option>
-                            <option value="Company Partnership">Company Partnership</option>
-                        </select>
-                    </div> -->
                     <div class="mb-3">
-                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="cnm" placeholder="Enter Company Name" id="cnm" required>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="cnm" placeholder="Enter Company Name" id="cnm">
                     </div>
                     <div class="mb-3">
-                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="mnm" placeholder="Enter Member Name" id="mnm" required>
+                        <input type="text" class="form-control" pattern="^[a-zA-Z ]{2,30}$" name="mnm" placeholder="Enter Member Name" id="mnm">
                     </div>
                     <div class="mb-3">
-                        <input type="number" class="form-control" pattern="[0-9]{10}" name="contact" placeholder="Enter Contact Number" id="contact" min="1000000000" max="9999999999" required>
+                        <input type="number" class="form-control" pattern="[0-9]{10}" name="contact" placeholder="Enter Contact Number" id="contact" min="1000000000" max="9999999999">
                     </div>
                     <div class="mb-3">
-                        <input type="email" class="form-control" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" placeholder="Enter Email Id" id="email" required>
+                        <input type="email" class="form-control" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" placeholder="Enter Email Id" id="email">
                     </div>
                     <div class="mb-3">
-                        <textarea class="form-control" name="address" placeholder="Enter Address" id="addr" required></textarea>
+                        <textarea class="form-control" name="address" placeholder="Enter Address" id="addr"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="dob" class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" name="dob" id="dob" required />
+                        <input type="date" class="form-control" name="dob" id="dob" />
                     </div>
                     <div class="mb-3">
                         <label for="category" class="form-label">Select Member Category</label>
-                        <select class="form-select" name="category" id="category" size="5" aria-label="size 3 select example" required\>
-                            <option selected>Actor</option>
-                            <option value="1">Actress</option>
-                            <option value="2">Art Director</option>
-                            <option value="3">Art Promotion</option>
-                            <option value="4">Asst. Art Director</option>
-                            <option value="5">Asst. Cameraman</option>
-                            <option value="6">Asst. Choreographer</option>
-                            <option value="7">Asst. Director</option>
-                            <option value="8">Asst. Motion Photographer</option>
-                            <option value="9">Asst. Photographer</option>
-                            <option value="10">Asst. Production Manager</option>
-                            <option value="11">Cameraman</option>
-                            <option value="12">Catering</option>
-                            <option value="13">Choreographer</option>
-                            <option value="14">Cinematographer</option>
-                            <option value="15">Co-Production House</option>
-                            <option value="16">Co-Actor</option>
-                            <option value="17">Director</option>
-                            <option value="18">Distributor</option>
-                            <option value="19">Dress Designer</option>
-                            <option value="20">Dressman</option>
-                            <option value="21">Editor</option>
-                            <option value="22">Fight Master</option>
-                            <option value="23">Hair Dresser</option>
-                            <option value="24">Lightman</option>
-                            <option value="25">Lyrics</option>
-                            <option value="26">Make up Artist</option>
-                            <option value="27">Motion Photographer</option>
-                            <option value="28">Music Director</option>
-                            <option value="29">Photographer</option>
-                            <option value="30">Producer</option>
-                            <option value="31">Production House</option>
-                            <option value="32">Production Manager</option>
-                            <option value="33">Promotion</option>
-                            <option value="34">Screen Play</option>
-                            <option value="35">Singer</option>
-                            <option value="36">Sound Designer</option>
-                            <option value="37">Spot Boy</option>
-                            <option value="38">Supp. Actor</option>
-                            <option value="41">Supp. Actress</option>
-                            <option value="42">Writer</option>
-                            <option value="43">Writer/Musician</option>
+                        <select class="form-select" name="category" id="category" size="5" aria-label="size 3 select example" required>
+                            <option value=0 selected>Select Category</option>
+                            <option value="Actor">Actor</option>
+                            <option value="Actress">Actress</option>
+                            <option value="Art Director">Art Director</option>
+                            <option value="Art Promotion">Art Promotion</option>
+                            <option value="Asst. Art Director">Asst. Art Director</option>
+                            <option value="Asst. Cameraman">Asst. Cameraman</option>
+                            <option value="Asst. Choreographer">Asst. Choreographer</option>
+                            <option value="Asst. Director">Asst. Director</option>
+                            <option value="Asst. Motion Photographer">Asst. Motion Photographer</option>
+                            <option value="Asst. Photographer">Asst. Photographer</option>
+                            <option value="Asst. Production Manager">Asst. Production Manager</option>
+                            <option value="Cameraman">Cameraman</option>
+                            <option value="Catering">Catering</option>
+                            <option value="Choreographer">Choreographer</option>
+                            <option value="Cinematographer">Cinematographer</option>
+                            <option value="Co-Production House">Co-Production House</option>
+                            <option value="Co-Actor">Co-Actor</option>
+                            <option value="Director">Director</option>
+                            <option value="Distributor">Distributor</option>
+                            <option value="Dress Designer">Dress Designer</option>
+                            <option value="Dressman">Dressman</option>
+                            <option value="Editor">Editor</option>
+                            <option value="Fight Master">Fight Master</option>
+                            <option value="Hair Dresser">Hair Dresser</option>
+                            <option value="Lightman">Lightman</option>
+                            <option value="Lyrics">Lyrics</option>
+                            <option value="Make up Artist">Make up Artist</option>
+                            <option value="Motion Photographer">Motion Photographer</option>
+                            <option value="Music Director">Music Director</option>
+                            <option value="Photographer">Photographer</option>
+                            <option value="Producer">Producer</option>
+                            <option value="Production House">Production House</option>
+                            <option value="Production Manager">Production Manager</option>
+                            <option value="Promotion">Promotion</option>
+                            <option value="Screen Play">Screen Play</option>
+                            <option value="Singer">Singer</option>
+                            <option value="Sound Designer">Sound Designer</option>
+                            <option value="Spot Boy">Spot Boy</option>
+                            <option value="Supp. Actor">Supp. Actor</option>
+                            <option value="Supp. Actress">Supp. Actress</option>
+                            <option value="Writer">Writer</option>
+                            <option value="Writer/Musician">Writer/Musician</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="membership_date" class="form-label">Membership Date</label>
-                        <input type="date" class="form-control" name="membership_date" id="membership_date" required />
+                        <input type="date" class="form-control" name="membership_date" id="membership_date" />
                     </div>
                     <div class="mb-3">
                         <label for="region" class="form-label">Select Region</label>
